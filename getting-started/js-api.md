@@ -11,10 +11,10 @@ _我们假定现在您已经有了一个 .wasm 模块了，不管是[是通过 C
 在[未来计划](/docs/future-features/)中，WebAssembly 模块可以使用 ES6 模块(使用`<script type="module">`)加载，WebAssembly 目前只能通过 JavaScript 来加载和编译。基础的加载，只需要3步：
 
 - 获取 `.wasm` 二进制文件，将它转换成类型数组或者 `ArrayBuffer`
-- 将二级制数据编译成一个 `WebAssembly.Module`
+- 将二进制数据编译成一个 `WebAssembly.Module`
 - 使用 imports 实例化这个 `WebAssembly.Module`，获取 exports。
 
-让我们来讨论一下这几个步骤的更多详情：
+让我们来详细讨论一下这几个步骤：
 
 第一步，我们有很多方式获取二进制文件的类型数组或 `ArrayBuffer`：通过网络，使用 XHR 或者 fetch，从 `文件`获取，从 IndexedDB获取，或者直接在 JavaScript 合成。
 

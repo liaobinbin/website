@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>Web Embedding - WebAssembly 中文网</title>
+  <link rel="stylesheet" type="text/css" href="/css/custom.css">
+  <meta name="keywords" content="wsam,WebAssembly中国,wsam中文">
+  <meta mame="description" content="WebAssembly 中文网是一个依附于WebAssembly官网内容的开源中文社区">
+</head>
+
+
+<body>
+  <header class="page-section">
+    <div class="container-narrow">
+    <div class="site-logo">
+    </div>
+    <nav class="site-nav">
+      <a class="site-nav-item btn" href="/">概述</a>
+      <a class="site-nav-item btn" href="/demo/">Demo</a>
+      <a class="site-nav-item btn" href="/getting-started/developers-guide/">快速开始</a>
+      
+      
+      <a class="site-nav-item btn" href="/docs/high-level-goals/">文档</a>
+      <a class="site-nav-item btn" href="/community/feedback/">社区</a>
+      <a class="site-nav-item btn" href="/roadmap/">路线图</a>
+      <a class="site-nav-item btn" href="/docs/faq/">FAQ</a>
+      <a class="site-nav-item btn" href="https://www.w3ctech.com/category/18">中文交流</a>
+      <a class="site-nav-item btn" href="https://github.com/WebAssembly-cn/website/wiki/%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E5%BF%85%E8%AF%BB%E6%8C%87%E5%8D%97">参与翻译</a>
+    </nav>
+    </div>
+  </header>
+  <section class="banner-update">
+    <div class="container-narrow">
+      <div class="banner-update-icon"></div>
+      <span class="banner-update-date"></span>
+      <span>多个浏览器已经达成对初始 WebAssembly 版本的一致意见 <a href="/roadmap/">查看更多</a></span>
+    </div>
+  </section>
+  
+
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-lg-9 col-pop">
+        <h1 id="web-embedding">Web Embedding</h1>
+
+<p>Unsurprisingly, one of WebAssembly’s primary purposes is to run on the Web,
+for example embedded in Web browsers (though this is
+<a href="../non-web/">not its only purpose</a>).</p>
+
+<p>This means integrating with the Web ecosystem, leveraging Web APIs, supporting
+the Web’s security model, preserving the Web’s portability, and designing in
+room for evolutionary development. Many of these goals are clearly
+reflected in WebAssembly’s <a href="../high-level-goals/">high-level goals</a>. In
+particular, WebAssembly MVP will be no looser from a security point of view
+than if the module was JavaScript.</p>
+
+<p>More concretely, the following is a list of points of contact between WebAssembly
+and the rest of the Web platform that have been considered:</p>
+
+<h2 id="javascript-api">JavaScript API</h2>
+
+<p>A <a href="../js/">JavaScript API</a> is provided which allows JavaScript to compile
+WebAssembly modules, perform limited reflection on compiled modules, store
+and retrieve compiled modules from offline storage, instantiate compiled modules
+with JavaScript imports, call the exported functions of instantiated modules,
+alias the exported memory of instantiated modules, etc.</p>
+
+<p>The Web embedding includes additional methods useful in that context.
+Non-web embeddings are not required to support these additional methods.</p>
+
+<h3 id="additional-web-embedding-api">Additional Web Embedding API</h3>
+
+<h4 id="webassemblycompilestreaming"><code class="highlighter-rouge">WebAssembly.compileStreaming</code></h4>
+
+<p><img class="emoji" title=":cyclone:" alt=":cyclone:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f300.png" height="20" width="20" align="absmiddle"> Added for milestone 2, developers must feature detect.</p>
+
+<p>In Web embeddings, the following methods are added.</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code>Promise&lt;WebAssembly.Module&gt; compileStreaming(source)
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">source</code> is unconditionally passed through the built-in value
+of <code class="highlighter-rouge">Promise.resolve</code>.
+If the result is not a <code class="highlighter-rouge">Response</code> object, then the returned <code class="highlighter-rouge">Promise</code> is
+<a href="http://tc39.github.io/ecma262/#sec-rejectpromise">rejected</a>
+with a <a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror"><code class="highlighter-rouge">TypeError</code></a>.
+This allows developers to pass either a promise that resolves
+to a
+<a href="https://fetch.spec.whatwg.org/#response-class"><code class="highlighter-rouge">Response</code></a>
+object or a
+<a href="https://fetch.spec.whatwg.org/#response-class"><code class="highlighter-rouge">Response</code></a>
+object (which is automatically cast to a
+promise) for the <code class="highlighter-rouge">source</code>.
+Renderer-side
+security checks about tainting for cross-origin content are tied to the types
+of filtered responses defined in
+<a href="https://fetch.spec.whatwg.org/#concept-fetch"><code class="highlighter-rouge">Fetch</code></a>.</p>
+
+<p>This function starts an asynchronous task to compile a <code class="highlighter-rouge">WebAssembly.Module</code>
+as described in the <a href="#webassemblymodule-constructor"><code class="highlighter-rouge">WebAssembly.Module</code> constructor</a>.
+On success, the <code class="highlighter-rouge">Promise</code> is <a href="http://tc39.github.io/ecma262/#sec-fulfillpromise">fulfilled</a>
+with the resulting <code class="highlighter-rouge">WebAssembly.Module</code> object. On failure, the <code class="highlighter-rouge">Promise</code> is
+<a href="http://tc39.github.io/ecma262/#sec-rejectpromise">rejected</a> with a
+<code class="highlighter-rouge">WebAssembly.CompileError</code> or <code class="highlighter-rouge">TypeError</code>, depending on the type of failure.</p>
+
+<p>The resolved <code class="highlighter-rouge">Response</code> is used as the source of the bytes to compile.
+MIME type information is
+<a href="https://fetch.spec.whatwg.org/#concept-header-extract-mime-type"><code class="highlighter-rouge">extracted</code></a>
+from the <code class="highlighter-rouge">Response</code>, WebAssembly <code class="highlighter-rouge">source</code> data must have a MIME type of <code class="highlighter-rouge">application/wasm</code>,
+extra parameters are not allowed (including empty <code class="highlighter-rouge">application/wasm;</code>).
+A MIME type mismatch, a response whose
+<a href="https://fetch.spec.whatwg.org/#concept-response-type">type</a> is not “basic”, “cors”, or
+“default”, or a response whose status is not an
+<a href="https://fetch.spec.whatwg.org/#ok-status">ok status</a>, must cause the Promise to be
+<a href="http://tc39.github.io/ecma262/#sec-rejectpromise">rejected</a> with a
+<code class="highlighter-rouge">TypeError</code>.</p>
+
+<h4 id="webassemblyinstantiatestreaming"><code class="highlighter-rouge">WebAssembly.instantiateStreaming</code></h4>
+
+<p><img class="emoji" title=":cyclone:" alt=":cyclone:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f300.png" height="20" width="20" align="absmiddle"> Added for milestone 2, developers must feature detect.</p>
+
+<p>In Web embeddings, the following methods are added.</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code>dictionary WebAssemblyInstantiatedSource {
+   required WebAssembly.Module module;
+   required WebAssembly.Instance instance;
+};
+
+Promise&lt;InstantiatedSource&gt; instantiateStreaming(source [, importObject])
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">source</code> is unconditionally passed through the built-in value
+of <code class="highlighter-rouge">Promise.resolve</code>.
+If the result is not a <code class="highlighter-rouge">Response</code> object, then the returned <code class="highlighter-rouge">Promise</code> is
+<a href="http://tc39.github.io/ecma262/#sec-rejectpromise">rejected</a>
+with a <a href="https://tc39.github.io/ecma262/#sec-native-error-types-used-in-this-standard-typeerror"><code class="highlighter-rouge">TypeError</code></a>.
+This allows developers to pass either a promise that resolves
+to a
+<a href="https://fetch.spec.whatwg.org/#response-class"><code class="highlighter-rouge">Response</code></a>
+object or a
+<a href="https://fetch.spec.whatwg.org/#response-class"><code class="highlighter-rouge">Response</code></a>
+object (which is automatically cast to a
+promise) for the <code class="highlighter-rouge">source</code>.
+Renderer-side
+security checks about tainting for cross-origin content are tied to the types
+of filtered responses defined in
+<a href="https://fetch.spec.whatwg.org/#concept-fetch"><code class="highlighter-rouge">Fetch</code></a>.</p>
+
+<p>This function starts an asynchronous task that first compiles a <code class="highlighter-rouge">WebAssembly.Module</code>
+based on bytes from <code class="highlighter-rouge">source</code> as described in
+the <a href="#webassemblymodule-constructor"><code class="highlighter-rouge">WebAssembly.Module</code> constructor</a>
+and then instantiate the resulting <code class="highlighter-rouge">Module</code> with <code class="highlighter-rouge">importObject</code> as described in the
+<a href="#webassemblyinstance-constructor"><code class="highlighter-rouge">WebAssembly.Instance</code> constructor</a>.
+On success, the <code class="highlighter-rouge">Promise</code> is <a href="http://tc39.github.io/ecma262/#sec-fulfillpromise">fulfilled</a>
+with a plain JavaScript object pair <code class="highlighter-rouge"><span class="p">{</span><span class="err">module,</span><span class="w"> </span><span class="err">instance</span><span class="p">}</span></code> containing the resulting
+<code class="highlighter-rouge">WebAssembly.Module</code> and <code class="highlighter-rouge">WebAssembly.Instance</code>. The 2 properties <code class="highlighter-rouge">module</code> and <code class="highlighter-rouge">instance</code> of the returned pair are  configurable, enumerable and writable.</p>
+
+<p>On failure, the <code class="highlighter-rouge">Promise</code> is
+<a href="http://tc39.github.io/ecma262/#sec-rejectpromise">rejected</a> with a
+<code class="highlighter-rouge">TypeError</code>, <code class="highlighter-rouge">WebAssembly.CompileError</code>, <code class="highlighter-rouge">WebAssembly.LinkError</code>, or <code class="highlighter-rouge">WebAssembly.RuntimeError</code>,
+depending on the cause of failure.</p>
+
+<p>The resolved <code class="highlighter-rouge">Response</code> is used as the source of the bytes to compile.
+MIME type information is
+<a href="https://fetch.spec.whatwg.org/#concept-header-extract-mime-type"><code class="highlighter-rouge">extracted</code></a>
+from the <code class="highlighter-rouge">Response</code>, WebAssembly <code class="highlighter-rouge">source</code> data must have a MIME type of <code class="highlighter-rouge">application/wasm</code>,
+extra parameters are not allowed (including empty <code class="highlighter-rouge">application/wasm;</code>).
+A MIME type mismatch, a response whose
+<a href="https://fetch.spec.whatwg.org/#concept-response-type">type</a> is not “basic”, “cors”, or
+“default”, or a response whose status is not an
+<a href="https://fetch.spec.whatwg.org/#ok-status">ok status</a>, must cause the Promise to be
+<a href="http://tc39.github.io/ecma262/#sec-rejectpromise">rejected</a> with a
+<code class="highlighter-rouge">TypeError</code>.</p>
+
+<h2 id="developer-facing-display-conventions">Developer-facing display conventions</h2>
+
+<p>Browsers, JavaScript engines, and offline tools have common ways of referring to
+JavaScript artifacts and language constructs. For example, locations in
+JavaScript source code are printed in stack traces or error messages, and are
+represented naturally as decimal-format lines and columns in text files. Names
+of functions and variables are taken directly from the sources. Therefore (for
+example) even though the exact format of Error.stack strings does not always
+match, the locations are easily understandable and the same across browsers.</p>
+
+<p>To achive the same goal of a common representations for WebAssembly constructs, the
+following conventions are adopted.</p>
+
+<p>A WebAssembly location is a reference to a particular instruction in the binary, and may be
+displayed by a browser or engine in similar contexts as JavaScript source locations.
+It has the following format:</p>
+
+<p><code class="highlighter-rouge">${url}:wasm-function[${funcIndex}]:${pcOffset}</code></p>
+
+<p>Where</p>
+<ul>
+  <li>
+<code class="highlighter-rouge">${url}</code> is the URL associated with the module, if applicable (see notes).</li>
+  <li>
+<code class="highlighter-rouge">${funcIndex}</code> is an index in the <a href="../modules/#function-index-space">function index space</a>.</li>
+  <li>
+<code class="highlighter-rouge">${pcOffset}</code> is the offset in the module binary of the first byte
+of the instruction, printed in hexadecimal with lower-case digits,
+with a leading <code class="highlighter-rouge">0x</code> prefix.</li>
+</ul>
+
+<p>Notes:</p>
+<ul>
+  <li>The URL field may be interpreted differently depending on the
+context. When the response-based
+instantiation <a href="#additional-web-embedding-api">API</a> is used in a
+browser, the associated URL should be used; or when the
+ArrayBuffer-based instantiation
+<a href="../js/#webassemblyinstantiate">API</a> is used, the browser should represent
+the location of the API call. This kind of instantiation is analagous to
+executing JavaScript using <code class="highlighter-rouge">eval</code>; therefore if the browser has an existing
+method to represent the location of the <code class="highlighter-rouge">eval</code> call it can use a similar
+one for <code class="highlighter-rouge">WebAssembly.instantiate</code>. For example if the browser uses
+<code class="highlighter-rouge">foo.js line 10 &gt; eval</code> or <code class="highlighter-rouge">eval at bar (foo.js:10:3)</code> for <code class="highlighter-rouge">eval</code>, it could
+use <code class="highlighter-rouge">foo.js line 10 &gt; WebAssembly.instantiate</code> or
+<code class="highlighter-rouge">WebAssembly.instantiate at bar (foo.js:10:3)</code>, respectively.
+Offline tools may use a filename instead.</li>
+  <li>Using hexadecimal for module offsets matches common conventions in native tools
+such as objdump (where addresses are printed in hex) and makes them visually
+distinct from JavaScript line numbers. Other numbers are represented in decimal.</li>
+</ul>
+
+<p>While the <code class="highlighter-rouge">name</code> property of <a href="../js/#exported-function-exotic-objects">exported WebAssembly functions</a>
+is specified by the JS API, synthesized function names are also
+displayed in other contexts like devtool callstacks and <code class="highlighter-rouge">Error.stack</code>.
+If a WebAssembly module contains a <a href="../binary-encoding/#name-section">“name” section</a>,
+these names should be used to synthesize a function name as follows:</p>
+<ul>
+  <li>If a function name subsection is present, the displayed name should
+be <code class="highlighter-rouge">${module_name}.${function_name}</code> or <code class="highlighter-rouge">${function_name}</code>, depending
+on whether the module name is present.</li>
+  <li>Otherwise, the output can be context-dependent:
+    <ul>
+      <li>If the function name is shown alongside its location in a
+stack trace, then just the module name (if present) or an empty string
+can be used (because the function index is already in the location).</li>
+      <li>Otherwise, <code class="highlighter-rouge">${module_name}.wasm-function[${funcIndex}]</code> or 
+<code class="highlighter-rouge">wasm-function[${funcIndex}]</code> should be used to convey the function index.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Note that this document does not specify the full format of strings such as
+stack frame representations; this allows engines to continue using their
+existing formats for JavaScript (which existing code may already be depending
+on) while still printing WebAssembly frames in a format consistent with
+JavaScript.</p>
+
+<h2 id="modules">Modules</h2>
+
+<p>WebAssembly’s <a href="../modules/">modules</a> allow for natural <a href="../modules/#integration-with-es6-modules">integration with
+the ES6 module system</a>.</p>
+
+<h3 id="names">Names</h3>
+
+<p>A WebAssembly module can have imports and exports, which are identified using
+UTF-8 byte sequences. The most natural Web representation of a mapping of export
+names to exports is a JS object in which each export is a property with a name
+encoded in UTF-16. A WebAssembly module fails validation on the Web if it has
+imports or exports whose names do not transcode cleanly to UTF-16 according to
+the following conversion algorithm, assuming that the WebAssembly name is in a
+<code class="highlighter-rouge">Uint8Array</code> called <code class="highlighter-rouge">array</code>:</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code>function convertToJSString(array)
+{
+  var string = "";
+  for (var i = 0; i &lt; array.length; ++i)
+    string += String.fromCharCode(array[i]);
+  return decodeURIComponent(escape(string));
+}
+</code></pre>
+</div>
+
+<p>This performs the UTF8 decoding (<code class="highlighter-rouge">decodeURIComponent(escape(string))</code>) using
+a <a href="http://monsur.hossa.in/2012/07/20/utf-8-in-javascript.html">common JS idiom</a>.
+Transcoding failure is detected by <code class="highlighter-rouge">decodeURIComponent</code>, which may throw
+<code class="highlighter-rouge">URIError</code>. If it does, the WebAssembly module will not validate. This validation
+rule is only mandatory for Web embedding.</p>
+
+<h2 id="security">Security</h2>
+
+<p>WebAssembly’s <a href="../security/">security</a> model should depend on the
+<a href="https://www.w3.org/Security/wiki/Same_Origin_Policy">same-origin policy</a>, with <a href="https://www.w3.org/TR/cors/">cross-origin resource sharing (CORS)</a> and
+<a href="https://www.w3.org/TR/SRI/">subresource integrity</a> to enable distribution through content
+distribution networks and to implement <a href="../dynamic-linking/">dynamic linking</a>.</p>
+
+<h2 id="simd">SIMD</h2>
+
+<p>Once <a href="../future-features/#fixed-width-simd">SIMD is supported</a> WebAssembly would:</p>
+
+<ul>
+  <li>Be statically typed analogous to <a href="http://discourse.specifiction.org/t/request-for-comments-simd-js-in-asm-js">SIMD.js-in-asm.js</a>;</li>
+  <li>Reuse specification of operation semantics (with TC39);</li>
+  <li>Reuse backend implementation (same IR nodes).</li>
+</ul>
+
+<h2 id="gc">GC</h2>
+
+<p>Once <a href="../gc/">GC is supported</a>, WebAssembly code would be able to reference
+and access JavaScript, DOM, and general WebIDL-defined objects.</p>
+
+
+      </div>
+      <div class="col-xs-12 col-lg-3">
+        <h6 class="side-title">文档</h6>
+        <nav class="side-nav">
+        
+        
+        <a class="side-nav-item" href="/docs/high-level-goals/">WebAssembly High-Level Goals</a>
+        
+        <a class="side-nav-item" href="/docs/js/">JavaScript API</a>
+        
+        <a class="side-nav-item" href="/docs/binary-encoding/">Binary Encoding</a>
+        
+        <a class="side-nav-item" href="/docs/text-format/">Text Format</a>
+        
+        <a class="side-nav-item" href="/docs/semantics/">Semantics</a>
+        
+        <a class="side-nav-item" href="/docs/modules/">Modules</a>
+        
+        <a class="side-nav-item" href="/docs/faq/">FAQ</a>
+        
+        <a class="side-nav-item" href="/docs/rationale/">Design Rationale</a>
+        
+        <a class="side-nav-item" href="/docs/mvp/">Minimum Viable Product</a>
+        
+        <a class="side-nav-item" href="/docs/future-features/">Features to add after the MVP</a>
+        
+        <a class="side-nav-item" href="/docs/portability/">Portability</a>
+        
+        <a class="side-nav-item" href="/docs/security/">Security</a>
+        
+        <a class="side-nav-item" href="/docs/nondeterminism/">Nondeterminism in WebAssembly</a>
+        
+        <a class="side-nav-item" href="/docs/c-and-c++/">Guide for C/C++ developers</a>
+        
+        <a class="side-nav-item" href="/docs/web/">Web Embedding</a>
+        
+        <a class="side-nav-item" href="/docs/non-web/">Non-Web Embeddings</a>
+        
+        <a class="side-nav-item" href="/docs/feature-test/">Feature Test</a>
+        
+        <a class="side-nav-item" href="/docs/tooling/">Tooling support</a>
+        
+        <a class="side-nav-item" href="/docs/gc/">GC / DOM / Web API Integration <img class="emoji" title=":unicorn:" alt=":unicorn:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f984.png" height="20" width="20" align="absmiddle"></a>
+        
+        <a class="side-nav-item" href="/docs/jit-library/">JIT and Optimization Library</a>
+        
+        <a class="side-nav-item" href="/docs/dynamic-linking/">Dynamic linking</a>
+        
+        <a class="side-nav-item" href="/docs/use-cases/">使用场景</a>
+        
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+<div style="display:none">
+    <script src="https://s19.cnzz.com/z_stat.php?id=1262073419&amp;web_id=1262073419" language="JavaScript"></script>
+</div>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

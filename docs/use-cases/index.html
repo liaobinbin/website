@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>使用场景 - WebAssembly 中文网</title>
+  <link rel="stylesheet" type="text/css" href="/css/custom.css">
+  <meta name="keywords" content="wsam,WebAssembly中国,wsam中文">
+  <meta mame="description" content="WebAssembly 中文网是一个依附于WebAssembly官网内容的开源中文社区">
+</head>
+
+
+<body>
+  <header class="page-section">
+    <div class="container-narrow">
+    <div class="site-logo">
+    </div>
+    <nav class="site-nav">
+      <a class="site-nav-item btn" href="/">概述</a>
+      <a class="site-nav-item btn" href="/demo/">Demo</a>
+      <a class="site-nav-item btn" href="/getting-started/developers-guide/">快速开始</a>
+      
+      
+      <a class="site-nav-item btn" href="/docs/high-level-goals/">文档</a>
+      <a class="site-nav-item btn" href="/community/feedback/">社区</a>
+      <a class="site-nav-item btn" href="/roadmap/">路线图</a>
+      <a class="site-nav-item btn" href="/docs/faq/">FAQ</a>
+      <a class="site-nav-item btn" href="https://www.w3ctech.com/category/18">中文交流</a>
+      <a class="site-nav-item btn" href="https://github.com/WebAssembly-cn/website/wiki/%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3%E7%BF%BB%E8%AF%91%E5%BF%85%E8%AF%BB%E6%8C%87%E5%8D%97">参与翻译</a>
+    </nav>
+    </div>
+  </header>
+  <section class="banner-update">
+    <div class="container-narrow">
+      <div class="banner-update-icon"></div>
+      <span class="banner-update-date"></span>
+      <span>多个浏览器已经达成对初始 WebAssembly 版本的一致意见 <a href="/roadmap/">查看更多</a></span>
+    </div>
+  </section>
+  
+
+<section>
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-lg-9 col-pop">
+        <h1 id="使用场景">使用场景</h1>
+
+<p>WebAssembly 的<a href="../high-level-goals/">整体目标</a> 定义了 WebAssembly 适合做<em>什么</em>。哪些是在 Web 平台可以实现的，哪些是非 Web 平台可以实现的。下面给出了一个不完善的无序列表，包括应用/领域/计算等方向，它们可能将从 WebAssembly 中受益的， WebAssamlby 的设计过程中也会将它们做为用例。</p>
+
+<h2 id="在浏览器中">在浏览器中</h2>
+
+<ul>
+  <li>更好的让一些语言和工具可以编译到 Web 平台运行。</li>
+  <li>图片/视频编辑。</li>
+  <li>游戏：
+    <ul>
+      <li>需要快速打开的小游戏</li>
+      <li>AAA 级，资源量很大的游戏。</li>
+      <li>游戏门户（代理/原创游戏平台）</li>
+    </ul>
+  </li>
+  <li>P2P 应用（游戏，实时合作编辑）</li>
+  <li>音乐播放器（流媒体，缓存）</li>
+  <li>图像识别</li>
+  <li>视频直播</li>
+  <li>VR 和虚拟现实</li>
+  <li>CAD 软件</li>
+  <li>科学可视化和仿真</li>
+  <li>互动教育软件和新闻文章。</li>
+  <li>模拟/仿真平台(ARC, DOSBox, QEMU, MAME, …)。</li>
+  <li>语言编译器/虚拟机。</li>
+  <li>POSIX用户空间环境，允许移植现有的POSIX应用程序。</li>
+  <li>开发者工具（编辑器，编译器，调试器…）</li>
+  <li>远程桌面。</li>
+  <li>VPN。</li>
+  <li>加密工具。</li>
+  <li>本地 Web 服务器。</li>
+  <li>使用 NPAPI 分发的插件，但会受限于 Web 安全协议，可以使用 Web APIs。</li>
+  <li>企业软件功能性客户端（比如：数据库）</li>
+</ul>
+
+<h1 id="脱离浏览器">脱离浏览器</h1>
+
+<ul>
+  <li>游戏分发服务（便携、安全）。</li>
+  <li>服务端执行不可信任的代码。</li>
+  <li>服务端应用。</li>
+  <li>移动混合原生应用。</li>
+  <li>多节点对称计算</li>
+</ul>
+
+<h1 id="如何使用-webassembly">如何使用 WebAssembly</h1>
+
+<ul>
+  <li>整个代码库都用 WebAssembly。</li>
+  <li>主要使用 WebAssembly 计算，UI 使用 JavaScript/HTML。</li>
+  <li>在大型 JavaScript/HTML 应用中复用已经存在的 WebAssembly 代码。像使用助手库一样，分担一些计算任务。</li>
+</ul>
+
+      </div>
+      <div class="col-xs-12 col-lg-3">
+        <h6 class="side-title">文档</h6>
+        <nav class="side-nav">
+        
+        
+        <a class="side-nav-item" href="/docs/high-level-goals/">WebAssembly High-Level Goals</a>
+        
+        <a class="side-nav-item" href="/docs/js/">JavaScript API</a>
+        
+        <a class="side-nav-item" href="/docs/binary-encoding/">Binary Encoding</a>
+        
+        <a class="side-nav-item" href="/docs/text-format/">Text Format</a>
+        
+        <a class="side-nav-item" href="/docs/semantics/">Semantics</a>
+        
+        <a class="side-nav-item" href="/docs/modules/">Modules</a>
+        
+        <a class="side-nav-item" href="/docs/faq/">FAQ</a>
+        
+        <a class="side-nav-item" href="/docs/rationale/">Design Rationale</a>
+        
+        <a class="side-nav-item" href="/docs/mvp/">Minimum Viable Product</a>
+        
+        <a class="side-nav-item" href="/docs/future-features/">Features to add after the MVP</a>
+        
+        <a class="side-nav-item" href="/docs/portability/">Portability</a>
+        
+        <a class="side-nav-item" href="/docs/security/">Security</a>
+        
+        <a class="side-nav-item" href="/docs/nondeterminism/">Nondeterminism in WebAssembly</a>
+        
+        <a class="side-nav-item" href="/docs/c-and-c++/">Guide for C/C++ developers</a>
+        
+        <a class="side-nav-item" href="/docs/web/">Web Embedding</a>
+        
+        <a class="side-nav-item" href="/docs/non-web/">Non-Web Embeddings</a>
+        
+        <a class="side-nav-item" href="/docs/feature-test/">Feature Test</a>
+        
+        <a class="side-nav-item" href="/docs/tooling/">Tooling support</a>
+        
+        <a class="side-nav-item" href="/docs/gc/">GC / DOM / Web API Integration <img class="emoji" title=":unicorn:" alt=":unicorn:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f984.png" height="20" width="20" align="absmiddle"></a>
+        
+        <a class="side-nav-item" href="/docs/jit-library/">JIT and Optimization Library</a>
+        
+        <a class="side-nav-item" href="/docs/dynamic-linking/">Dynamic linking</a>
+        
+        <a class="side-nav-item" href="/docs/use-cases/">使用场景</a>
+        
+        </nav>
+      </div>
+    </div>
+  </div>
+</section>
+<div style="display:none">
+    <script src="https://s19.cnzz.com/z_stat.php?id=1262073419&amp;web_id=1262073419" language="JavaScript"></script>
+</div>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+</body>
+</html>

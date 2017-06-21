@@ -3,8 +3,8 @@ rvm:
   - 2.2
 
 before_script:
-- git config --global user.name '$USER_NAME'
-- git config --global user.email '$USRE_EMAIL'
+- git config --global user.name 'fanmingfei'
+- git config --global user.email 'az8641683@163.com'
 
 script:
   - bundle exec jekyll build

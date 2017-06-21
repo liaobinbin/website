@@ -17,7 +17,7 @@ layout: getting-started
 
 安装完毕后，确认 `git`，`cmake` 和 `python` 已经在你的环境变量里，可以使用。
 
-### 编译 Emascripten
+### 编译 Emscripten
 
 通过 Emscripten SDK 构建 Emscripten 是自动的，下面是步骤。
 

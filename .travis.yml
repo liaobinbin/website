@@ -1,5 +1,21 @@
 language: ruby
 rvm:
   - 2.2
+
+before_script:
+- git config --global user.name '$USER_NAME'
+- git config --global user.email '$USRE_EMAIL'
+
 script:
-  - bundle exec jekyll build --destination=_docs && diff -arq docs _docs
+  - bundle exec jekyll build
+
+after_success:
+- mkdir .deploy
+- cd .deploy
+- git clone --depth 1 --branch gh-pages --single-branch https://$ROBOT_TOKEN@github.com/$USER_NAME/website.git . || (git init && git remote add -t gh-pages origin https://$ROBOT_TOKEN@github.com/$USER_NAME/website.git)
+- rm -rf ./*
+- cp -r ../docs/* .
+- git add -A .
+- git commit -m 'Auto updated'
+- git branch -m gh-pages
+- git push -q -u origin gh-pages

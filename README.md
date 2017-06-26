@@ -1,39 +1,39 @@
-# Website
+# 项目网站
 
-Project overview for WebAssembly: [webassembly.org](http://webassembly.org)
+WebAssembly 中文项目预览: [webassembly.org.cn](http://webassembly.org.cn)
 
-## Dependencies
+## 依赖
 
 - Ruby >= 2.0.0
 - [Bundler](http://bundler.io/)
 
-## Building the site
+## 构架站点
 
-Clone the project and the `design` submodule:
+克隆本项目和`design`子模块:
 
 ```
 $ git clone https://github.com/WebAssembly/website
 $ git submodule update --init --recursive
 ```
 
-Install gem dependencies:
+安装gem依赖:
 
 ```
 $ bundle install
 ```
 
-Build with Jekyll or serve local preview:
+通过Jekyll生成或者本地服务器预览:
 
 ```
 $ bundle exec jekyll build
 $ bundle exec jekyll serve
 ```
 
-> You must run `bundle exec jekyll build` after every change and include the `docs` directory in your commit!
+> 在每次修改后你必须执行 `bundle exec jekyll build` 命令，并在你的提交中包含 `docs` 目录！
 
-## Publishing
+## 部署
 
-This site uses Jekyll plugins, so GitHub Pages will not build it automatically. To publish, check in manually built static site files to the `docs` directory.
+这个站点使用Jekyll插件, 所以GitHub Pages不能自动的构建它. 为了部署它, 你需要手动检查构建的静态站点文件到 `docs` 目录.
 
 The static site should be configured to build to the `docs` directory. The `docs` directory is a special directory from which GitHub pages can publish directly. The naming convention is unfortunate given the confusing overlap with the site's own `docs` pages (output to `docs/docs`) which are themselves generated from the design docs submodule located at `design`.
 
